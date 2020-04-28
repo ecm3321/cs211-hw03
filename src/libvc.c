@@ -41,6 +41,17 @@ static struct vote_count* vc_find_name ( vote_count_t vc , const char * name )
     return NULL;
 }
 
+//Returns a pointer to the first element of 'vc' whose 'candidate' is NULL,     
+// or NULL if 'vc' is full.                                                     
+static struct vote_count* vc_find_empty(vote_count_t vc);
+{
+}
+
+// Clones a string onto the heap, printing a message to stderr and exiting with
+// code 1 if malloc() fails.                                                    
+static char* strdup_or_else(const char* src)
+{
+}
 
 vote_count_t vc_create(void)
 {
