@@ -56,7 +56,12 @@ vote_count_t vc_create(void)
 
 void vc_destroy(vote_count_t vc)
 {
-
+    size_t i = 0;
+    while (i < MAX_CANDIDATES && vc[i].candidate != NULL) {
+        free(vc->candidate);
+	vc = vc	+ 1;
+        i = i + 1;
+    }
 }
 
 size_t* vc_update(vote_count_t vc, const char *name)
