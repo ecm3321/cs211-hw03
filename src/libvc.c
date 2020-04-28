@@ -29,19 +29,34 @@ struct vote_count
  * A: libvc.h
  */
 
+static struct vote_count* vc_find_name ( vote_count_t vc , const char * name )
+{
+    size_t i = 0;
+    while (i < MAX_CANDIDATES && vc[i].candidate != NULL){
+        if(strcmp(vc[i].candidate, name) == 1 ){
+            return vc[i] -> candidate;
+        }
+        i = i + 1;
+    }
+    return NULL;
+}
+
+
 vote_count_t vc_create(void)
 {
-    //
-    // TODO: replace with your code:
-    //
+    sizze_t i = 0;
+    vote_count_t result = malloc(MAX_CANDIDATES * sizeof(struct vote_count));
+    while (result[i] != NULL && i < MAX_CANDIDATES) {
+        result[i].candidate = NULL;
+        i = i + 1;
+        return result;
+    }
     return NULL;
 }
 
 void vc_destroy(vote_count_t vc)
 {
-    //
-    // TODO: your code would look good here
-    //
+
 }
 
 size_t* vc_update(vote_count_t vc, const char *name)
