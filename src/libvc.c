@@ -114,13 +114,21 @@ size_t* vc_update(vote_count_t vc, const char *name)
 }
 
 
+
 size_t vc_lookup(vote_count_t vc, const char* name)
 {
-    //
-    // TODO: replace with your code:
-    //
-    return 0;
+    size_t i=0;
+    while(i<=MAX_CANDIDATES && vc[i].candidate != NULL)
+    {
+        if (strcmp(*vc[i].candidate, *name) ==0)//might need star after name
+        {
+            return vc[1].count // *vc_update(vc, name);
+        }
+        i=i+1;
+    }
 }
+
+
 
 size_t vc_total(vote_count_t vc)
 {
@@ -146,9 +154,14 @@ const char* vc_min(vote_count_t vc)
     return NULL;
 }
 
+
 void vc_print(vote_count_t vc)
 {
     //
-    // TODO: your code here
-    //
-}
+    size_t i=0;
+    while(vc[i]!=NULL)
+    {
+        printf("%s %1f \n",vc[i].candidate, vc[1].count);
+    }
+
+
