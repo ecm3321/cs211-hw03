@@ -29,41 +29,45 @@ struct vote_count
  * A: libvc.h
  */
 
-static struct vote_count* vc_find_name ( vote_count_t vc , const char * name )
+// Returns a pointer to the first element of 'vc' whose 'candidate' matches     
+// 'name', or NULL if there is no such element.                                 
+static struct vote_count* vc_find_name (vote_count_t vc, const char * name)
 {
     size_t i = 0;
     while (i < MAX_CANDIDATES && vc[i].candidate != NULL){
         if(strcmp(vc[i].candidate, name) == 1 ){
-            return vc[i] -> candidate;
+            return &vc[i];
         }
         i = i + 1;
     }
     return NULL;
 }
 
-//returns a pointer to the first element of 'vc' whose 'candidate/ is NULL
-//or NULL if 'vc' is full
+//Returns a pointer to the first element of 'vc' whose 'candidate' is NULL,     
+// or NULL if 'vc' is full.                                                     
 static struct vote_count* vc_find_empty(vote_count_t vc)
 {
-     size_t i=0;
-    (while vc[i] != NULL)
-    {
-        i= i+1;
+    size_t i = 0;
+    while (i < MAX_CANDIDATES){
+        if(vc[i].candidate == NULL){
+            return &vc[i];
+        }
+        i = i + 1;
     }
-    return vc[i]; //am I returning the pointer or the value rn?
+    return NULL;
 }
 
 // Clones a string onto the heap, printing a message to stderr and exiting with
 // code 1 if malloc() fails.                                                    
-static char* strdup_or_else(const char* src)
-{
-}
+//static char* strdup_or_else(const char* src)                                  
+//{                                                                             
+//}    
 
 vote_count_t vc_create(void)
 {
     sizze_t i = 0;
     vote_count_t result = malloc(MAX_CANDIDATES * sizeof(struct vote_count));
-    while (result[i] != NULL && i < MAX_CANDIDATES) {
+    while (result[i].candidate != NULL && i < MAX_CANDIDATES) {
         result[i].candidate = NULL;
         i = i + 1;
         return result;
