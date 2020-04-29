@@ -36,23 +36,21 @@ struct vote_count
 // 'name', or NULL if there is no such element.                                 
 static struct vote_count* vc_find_name (vote_count_t vc, const char * name)
 {
-    size_t i = 0;
-    if (vc[i].candidate != NULL) {
-        while (i < MAX_CANDIDATES && vc[i].candidate != NULL && name != NULL){ \
-
-            if(strcmp(name, vc[i].candidate) == 0){
-                return &vc[i];
-            }
-            i = i + 1;
+size_t i = 0;
+    while (i < MAX_CANDIDATES && vc[i].candidate != NULL && name != NULL){
+        if(strcmp(name, vc[i].candidate) == 0){
+            return &vc[i];
         }
+        i = i + 1;
     }
+    return NULL;
 }
 
 //Returns a pointer to the first element of 'vc' whose 'candidate' is NULL,     
 // or NULL if 'vc' is full.                                                     
 static struct vote_count* vc_find_empty(vote_count_t vc)
 {
-      size_t i = 0;
+size_t i = 0;
     while (i < MAX_CANDIDATES){
         if(vc[i].candidate == NULL){
             return &vc[i];
@@ -62,18 +60,20 @@ static struct vote_count* vc_find_empty(vote_count_t vc)
     return NULL;
 }
 
+}
+
 // Clones a string onto the heap, printing a message to stderr and exiting with
 // code 1 if malloc() fails.                                                    
 static char* strdup_or_else(const char* src)
 {
-    int n = strlen(src);
+int n = strlen(src);
     char* q = malloc(sizeof(char) * n + 1);
     if (q != NULL) {
         strcpy(q, src);
         return q;
     } else {
         fprintf(stderr, OOM_MESSAGE, src);
-        return NULL;
+        exit(1);
     }
 }
 
@@ -82,37 +82,36 @@ vote_count_t vc_create(void)
 {
     size_t i = 0;
     vote_count_t result = malloc(MAX_CANDIDATES * sizeof(struct vote_count));
-    while (result[i].candidate != NULL && i < MAX_CANDIDATES) {
+    if (!result) return NULL;
+
+    while (i < MAX_CANDIDATES) {
         result[i].candidate = NULL;
         i = i + 1;
-        return result;
     }
-    return NULL;
+    return result;
 }
 
 void vc_destroy(vote_count_t vc)
 {
     size_t i = 0;
-
-    while (i < MAX_CANDIDATES && vc[i].candidate != NULL) {
-        free(vc->candidate);
-        vc = vc + 1;
+    while (i < MAX_CANDIDATES) {
+        free(vc[i].candidate);
         i = i + 1;
     }
+    free(vc);
 }
 
 size_t* vc_update(vote_count_t vc, const char *name)
 {
-   if(vc[0].candidate != NULL){
-        struct vote_count* match_element = vc_find_name(vc, name);
-        if (match_element != NULL) {
-            return &(match_element -> count);
-        } else {
-            struct vote_count* next = vc_find_empty(vc);
-            struct vote_count new_element = {strdup_or_else(name), 0};
-            *next = new_element;
-            return &(next -> count);
-        }
+   struct vote_count* match_element = vc_find_name(vc, name);
+    if (match_element != NULL) {
+        return &(match_element -> count);
+    }
+    struct vote_count* next = vc_find_empty(vc);
+    if (next != NULL){
+        struct vote_count new_element = {strdup_or_else(name), 0};
+        *next = new_element;
+        return &(next -> count);
     }
     return NULL;
 }
@@ -121,12 +120,9 @@ size_t* vc_update(vote_count_t vc, const char *name)
 
 size_t vc_lookup(vote_count_t vc, const char* name)
 {
-    size_t i = 0;
-    if (vc[i].candidate != NULL){
-        struct vote_count* exists = vc_find_name(vc, name);
-        if(exists != NULL){
-            return exists -> count;
-        }
+    struct vote_count* exists = vc_find_name(vc, name);
+    if(exists != NULL){
+        return exists -> count;
     }
     return 0;
 }
@@ -189,11 +185,13 @@ const char* vc_min(vote_count_t vc)
 
 void vc_print(vote_count_t vc)
 {
-    //
-    size_t i=0;
-    while(vc[i]!=NULL)
-    {
-        printf("%s %1f \n",vc[i].candidate, vc[1].count);
+    size_t i = 0;
+    if (vc[i].candidate != NULL){
+        while (i < MAX_CANDIDATES && vc[i].candidate != NULL){
+            printf("%-20s %-9ld\n", vc[i].candidate, vc[i].count);
+            i = i + 1;
+        }
     }
+}
 
 
