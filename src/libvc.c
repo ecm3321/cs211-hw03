@@ -37,20 +37,22 @@ struct vote_count
 static struct vote_count* vc_find_name (vote_count_t vc, const char * name)
 {
     size_t i = 0;
-    while (i < MAX_CANDIDATES && vc[i].candidate != NULL){
-        if(strcmp(vc[i].candidate, name) == 0){
-            return &vc[i];
+    if (vc[i].candidate != NULL) {
+        while (i < MAX_CANDIDATES && vc[i].candidate != NULL && name != NULL){ \
+
+            if(strcmp(name, vc[i].candidate) == 0){
+                return &vc[i];
+            }
+            i = i + 1;
         }
-        i = i + 1;
     }
-    return NULL;
 }
 
 //Returns a pointer to the first element of 'vc' whose 'candidate' is NULL,     
 // or NULL if 'vc' is full.                                                     
 static struct vote_count* vc_find_empty(vote_count_t vc)
 {
-    size_t i = 0;
+      size_t i = 0;
     while (i < MAX_CANDIDATES){
         if(vc[i].candidate == NULL){
             return &vc[i];
@@ -101,14 +103,16 @@ void vc_destroy(vote_count_t vc)
 
 size_t* vc_update(vote_count_t vc, const char *name)
 {
-    struct vote_count* match_element = vc_find_name(vc, name);
-    if (match_element != NULL) {
-        return &(match_element -> count);
-    } else {
-        struct vote_count* next = vc_find_empty(vc);
-        struct vote_count new_element = {strdup_or_else(name), 0};
-        *next = new_element;
-        return &(next -> count);
+   if(vc[0].candidate != NULL){
+        struct vote_count* match_element = vc_find_name(vc, name);
+        if (match_element != NULL) {
+            return &(match_element -> count);
+        } else {
+            struct vote_count* next = vc_find_empty(vc);
+            struct vote_count new_element = {strdup_or_else(name), 0};
+            *next = new_element;
+            return &(next -> count);
+        }
     }
     return NULL;
 }
@@ -117,40 +121,68 @@ size_t* vc_update(vote_count_t vc, const char *name)
 
 size_t vc_lookup(vote_count_t vc, const char* name)
 {
-    size_t i=0;
-    while(i<=MAX_CANDIDATES && vc[i].candidate != NULL)
-    {
-        if (strcmp(*vc[i].candidate, *name) ==0)//might need star after name
-        {
-            return vc[1].count // *vc_update(vc, name);
+    size_t i = 0;
+    if (vc[i].candidate != NULL){
+        struct vote_count* exists = vc_find_name(vc, name);
+        if(exists != NULL){
+            return exists -> count;
         }
-        i=i+1;
     }
+    return 0;
 }
 
 
 
 size_t vc_total(vote_count_t vc)
 {
-    //
-    // TODO: replace with your code:
-    //
+    size_t i = 0;
+    size_t sum = 0;
+    if (vc[i].candidate != NULL){
+        while (i < MAX_CANDIDATES && vc[i].candidate != NULL){
+            sum = sum + vc[i].count;
+            i = i + 1;
+        }
+        return sum;
+    }
     return 0;
 }
 
 const char* vc_max(vote_count_t vc)
 {
-    //
-    // TODO: replace with your code:
-    //
+size_t i = 0;
+    size_t t = 0;
+    size_t max = vc[i].count;
+    if (vc[i].candidate != NULL){
+        while (i < MAX_CANDIDATES && vc[i].candidate != NULL){
+            if(vc_lookup(vc, vc[i].candidate) > max){
+                max = vc_lookup(vc, vc[i].candidate);
+                t = i;
+            }
+            i = i + 1;
+        }
+        return vc[t].candidate;
+    }
     return NULL;
 }
 
 const char* vc_min(vote_count_t vc)
 {
-    //
-    // TODO: replace with your code:
-    //
+   size_t i = 0;
+    size_t t = 0;
+    size_t min = vc_lookup(vc, vc_max(vc));
+    if (vc[i].candidate != NULL){
+        while (i < MAX_CANDIDATES && vc[i].candidate != NULL){
+            if(vc_lookup(vc, vc[i].candidate) < min
+               && vc_lookup(vc, vc[i].candidate) != 0){
+                min = vc_lookup(vc, vc[i].candidate);
+                t = i;
+            }
+            i = i + 1;
+        }
+        if (min > 0) {
+            return vc[t].candidate;
+        }
+    }
     return NULL;
 }
 
