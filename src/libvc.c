@@ -41,10 +41,16 @@ static struct vote_count* vc_find_name ( vote_count_t vc , const char * name )
     return NULL;
 }
 
-//Returns a pointer to the first element of 'vc' whose 'candidate' is NULL,     
-// or NULL if 'vc' is full.                                                     
-static struct vote_count* vc_find_empty(vote_count_t vc);
+//returns a pointer to the first element of 'vc' whose 'candidate/ is NULL
+//or NULL if 'vc' is full
+static struct vote_count* vc_find_empty(vote_count_t vc)
 {
+     size_t i=0;
+    (while vc[i] != NULL)
+    {
+        i= i+1;
+    }
+    return vc[i]; //am I returning the pointer or the value rn?
 }
 
 // Clones a string onto the heap, printing a message to stderr and exiting with
@@ -78,10 +84,23 @@ void vc_destroy(vote_count_t vc)
 size_t* vc_update(vote_count_t vc, const char *name)
 {
     //
-    // TODO: replace with your code:
+   vote_count match_element= vc_find_name(vc, name); //should i have the *?
+    
+    if( match_element != NULL) //should it be *name? or *match_element, am i supposed to use *?
+    {
+        return ptr_to_element -> count;
+    }
+    else{
+        vote_count next= vc_find_empty(vc);
+        struct vote_count new_element= {name, 0};
+        *next= new_element;
+        return next -> count;
+    }
+ 
     //
     return NULL;
 }
+
 
 size_t vc_lookup(vote_count_t vc, const char* name)
 {
