@@ -58,12 +58,16 @@ static void test_2_candidates(void)
     CHECK( cp );
     ++*cp;
     CHECK_STRING( vc_max(vc), "alice" );
-    CHECK_STRING( vc_min(vc), "bob" ); //end of sketchy part
+    CHECK_STRING( vc_min(vc), "bob" );
+    //CHECK_SIZE( vc_lookup(vc, "alice"), 3 );//checking if tie
+    //CHECK_SIZE( vc_lookup(vc, "bob"), 3 );
 
 
-
+    //vc_destroy(vc);
+    //vc = NULL;
     vc_destroy(vc);
 }
+
 
 
 //
