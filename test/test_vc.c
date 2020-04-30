@@ -77,11 +77,15 @@ static void test_max_candidates(void)
     vote_count_t vc = vc_create();
     assert(vc);
     size_t i=0;
+    char name= a;
     
-    while(i<=
-    cp = vc_update(vc, "bob");
+    while(i<=MAX_CANDIDATES){
+    cp = vc_update(vc, name);
     CHECK( cp );
     ++*cp;
+        name=name+1;
+    }
+    
 }
 //
 
