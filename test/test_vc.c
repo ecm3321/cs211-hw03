@@ -71,7 +71,18 @@ static void test_2_candidates(void)
 
 
 //
-// You need more tests here.
+static void test_max_candidates(void)
+{
+    size_t* cp;//what is cp?
+    vote_count_t vc = vc_create();
+    assert(vc);
+    size_t i=0;
+    
+    while(i<=
+    cp = vc_update(vc, "bob");
+    CHECK( cp );
+    ++*cp;
+}
 //
 
 int main(void)
