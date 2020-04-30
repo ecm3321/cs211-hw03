@@ -73,19 +73,29 @@ static void test_2_candidates(void)
 //
 static void test_max_candidates(void)
 {
-    size_t* cp;//what is cp?
+    size_t* cp;
     vote_count_t vc = vc_create();
     assert(vc);
-    size_t i=0;
-    char name= a;
-    
-    while(i<=MAX_CANDIDATES){
-    cp = vc_update(vc, name);
-    CHECK( cp );
-    ++*cp;
-        name=name+1;
+
+    size_t i = 0;
+
+    const char* array[26] = {"a","b","c","d","e","f","g","h","i","j","k",
+                             "l","m","n","o","p","q","r","s","t","u","v",
+                             "w","x","y","z"};
+    while (i < 26){
+        cp = vc_update(vc, array[i]);
+        if(i >= MAX_CANDIDATES){
+            CHECK( !cp );
+            break;
+        } else {
+            CHECK( cp );
+            ++*cp;
+            i = i + 1;
+        }
     }
-    
+    CHECK_SIZE( vc_total(vc), MAX_CANDIDATES);
+
+    vc_destroy(vc);
 }
 //
 
